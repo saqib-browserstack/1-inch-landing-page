@@ -9,7 +9,7 @@ fi
 echo "Running accessibility checks on staged changes..."
 
 if [ -n "$NON_STRICT_A11Y_CHECKS" ]; then
-  "$GIT_ROOT/browserstack-cli" accessibility --include "$GIT_ROOT/src/**/*.jsx"
+  "./browserstack-cli" accessibility --include "$GIT_ROOT/src/**/*.jsx"
   exit 0
 fi
 
