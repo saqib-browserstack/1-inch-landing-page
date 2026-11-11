@@ -17,7 +17,8 @@ jobs:
 
       - name: Install BrowserStack Accessibility CLI
         run: |
-          curl -L "https://api.browserstack.com/sdk/v1/download_cli?os=linux&os_arch=x64" | tar -xz -O > browserstack-cli
+          curl -fsSL -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+            "https://api.browserstack.com/sdk/v1/download_cli?os=linux&os_arch=x64" | tar -xz -O > browserstack-cli
           chmod +x browserstack-cli
 
       - name: Run accessibility checks
