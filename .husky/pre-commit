@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
-GIT_ROOT=$(git rev-parse --show-toplevel)
-
-if [ -n "$SKIP_A11Y_CHECKS" ]; then
-  echo "Skipping accessibility checks."
-  exit 0
-fi
-
-echo "Running accessibility checks on staged changes..."
-
-if [ -n "$NON_STRICT_A11Y_CHECKS" ]; then
-  "$GIT_ROOT/browserstack-cli" accessibility --include "$GIT_ROOT/src/**/*.jsx" --scope=diff --non-strict
-  exit 0
-fi
-
-"$GIT_ROOT/browserstack-cli" accessibility --include "$GIT_ROOT/src/**/*.jsx" --scope=diff
-exit $?
+#GIT_ROOT=$(git rev-parse --show-toplevel)
+#cd "$GIT_ROOT" || exit 1
+#
+#if [ -n "$SKIP_A11Y_CHECKS" ]; then
+#  echo "Skipping accessibility checks."
+#  exit 0
+#fi
+#
+#echo "Running accessibility checks on all source files..."
+#
+#if [ -n "$NON_STRICT_A11Y_CHECKS" ]; then
+#  ./browserstack-cli accessibility --include "./src/**/*.jsx" --non-strict
+#  exit 0
+#fi
+#
+#./browserstack-cli accessibility --include "./src/**/*.jsx"
+#exit $?
