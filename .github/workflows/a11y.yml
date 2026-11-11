@@ -3,6 +3,10 @@ name: Accessibility check
 on:
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   a11y:
@@ -12,14 +16,22 @@ jobs:
       BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install BrowserStack Accessibility CLI
         run: |
-          curl -fsSL -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
-            "https://api.browserstack.com/sdk/v1/download_cli?os=linux&os_arch=x64" | tar -xz -O > browserstack-cli
+          curl -sSL -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+            -o cli.download -w "HTTP %{http_code}, type: %{content_type}, size: %{size_download}\n" \
+            "https://api.browserstack.com/sdk/v1/download_cli?os=linux&os_arch=x64"
+          file cli.download
+          case "$(file -b cli.download)" in
+            gzip*)         tar -xzf cli.download -O > browserstack-cli ;;
+            Zip*)          unzip -p cli.download > browserstack-cli ;;
+            POSIX\ tar*)   tar -xf cli.download -O > browserstack-cli ;;
+            ELF*)          mv cli.download browserstack-cli ;;
+            *)             echo "Unexpected download type:"; head -c 500 cli.download | cat -v; echo; exit 1 ;;
+          esac
           chmod +x browserstack-cli
+          ./browserstack-cli --help
 
       - name: Run accessibility checks
         run: ./browserstack-cli accessibility --include "./src/**/*.jsx" --format html --output accessibility-devtools-report.html
@@ -30,3 +42,4 @@ jobs:
         with:
           name: accessibility-devtools-report
           path: accessibility-devtools-report.html
+          if-no-files-found: ignore
