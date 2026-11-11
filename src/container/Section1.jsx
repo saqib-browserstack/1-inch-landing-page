@@ -68,7 +68,7 @@ const Section1 = () => {
         }}
       >
         <img src={MainBG} style={{width: "100%", opacity: 0}} />
-        {/*<img src="/test.png" />*/}
+        <img src="/test.png" />
         {/* Star */}
         <img
           src={ShootingStarImage}
